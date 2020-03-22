@@ -105,7 +105,7 @@ print('x_init: ', x_init)
 print('sum_init: ', sum_init)
 
 # stepsize for gradient ascent
-alpha = 0.01
+alpha = 0.2
 
 def gradient_ascent(x_init, F, x, f, N, alpha):
 
@@ -125,18 +125,32 @@ def gradient_ascent(x_init, F, x, f, N, alpha):
 
         sum_update = F(x, f, N)
 
-        # print('x updated: ', x)
-        # print('sum updated: ', sum_update)
+        print('x updated: ', x)
+        print('sum updated: ', sum_update)
 
+    print('Iterations: ', iter)
+    print('Initial F: ', sum_init)
+    print('Initial x: ', x_init)
+    print('Final F: ', sum_update)
+    print('Final x: ', x)
     return iter, sum_update, x
 
 
-iter, sum_update, x_optimal = gradient_ascent(x_init, F, x, f, N, alpha)
-print('Iterations: ', iter)
-print('Initial F: ', sum_init)
-print('Initial x: ', x_init)
-print('Final F: ', sum_update)
-print('Final x: ', x)
+# iter, sum_update, x_optimal = gradient_ascent(x_init, F, x, f, N, alpha)
+
+
+## define new f functions: 2^S -> R
+def f_concave(S):
+    sum = 0
+    ps_S = powerset(S)
+    for list in ps_S:
+        sum += np.sum([((-list[i])**i) for i in range(len(list))])
+
+    return sum
+
+print(f_concave(S))
+
+iter, sum_update, x_optimal = gradient_ascent(x_init, F, x, f_concave, N, alpha)
 
 
 #
