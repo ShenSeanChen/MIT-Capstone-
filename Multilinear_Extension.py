@@ -6,7 +6,7 @@ import numpy as np
 
 ## Key values
 n = 5 # number of elements in set N
-S_size = 2
+S_size = 2 # size of
 
 N = [(i+1) for i in range(n)] # set N
 S = random.sample(N, S_size) # subset S
@@ -35,6 +35,8 @@ print(len(ps_S))
 
 ## define a pseudo-function f: 2^S -> R
 
+# The following f is computing the sum of all subsets,
+# which means that the maximum of F will be reached when all xi are 1
 def f(S):
     sum = 0
     ps_S = powerset(S)
@@ -95,35 +97,47 @@ def get_gradient_F(F, x, f, N, i):
 i = 3
 print('gradient: ', get_gradient_F(F, x, f, N, i))
 
-## Optimize the F function
+## Optimize the F function by first-order gradient ascent
+
 x_init = copy.deepcopy(x)
 sum_init = F(x, f, N)
 print('x_init: ', x_init)
 print('sum_init: ', sum_init)
-sum_update = 0
-iter = 0
+
+# stepsize for gradient ascent
 alpha = 0.01
-sum_temp = copy.deepcopy(sum_init)
 
-# def gradient_ascent(x_init, F, x, f, N, alpha):
-while np.abs(sum_temp - sum_update) > 10**(-2):
-    iter += 1
-    sum_temp = F(x, f, N)
+def gradient_ascent(x_init, F, x, f, N, alpha):
 
-    for i in range(n):
-        grad_i = get_gradient_F(F, x, f, N, i)
-        x[i] = np.minimum(x[i] + alpha * grad_i, 1.0)
+    # key values to be used
+    sum_update = 0
+    iter = 0
+    sum_temp = copy.deepcopy(sum_init)
 
-    sum_update = F(x, f, N)
+    # start updating the parameters x with iterative gradients
+    while np.abs(sum_temp - sum_update) > 10 ** (-2):
+        iter += 1
+        sum_temp = F(x, f, N)
 
-    print('x updated: ', x)
-    print('sum updated: ', sum_update)
+        for i in range(n):
+            grad_i = get_gradient_F(F, x, f, N, i)
+            x[i] = np.minimum(x[i] + alpha * grad_i, 1.0)
 
+        sum_update = F(x, f, N)
+
+        # print('x updated: ', x)
+        # print('sum updated: ', sum_update)
+
+    return iter, sum_update, x
+
+
+iter, sum_update, x_optimal = gradient_ascent(x_init, F, x, f, N, alpha)
 print('Iterations: ', iter)
 print('Initial F: ', sum_init)
 print('Initial x: ', x_init)
 print('Final F: ', sum_update)
 print('Final x: ', x)
+
 
 #
 # # Run the function
