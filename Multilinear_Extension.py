@@ -158,3 +158,5 @@ iter, sum_update, x_optimal = gradient_ascent(x_init, F, x, f_concave, N, alpha)
 # if __name__ == '__main__':
 #     x_optimal = get_x()
 #     print(x_optimial)
+
+# showing Neil 
